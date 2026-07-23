@@ -125,7 +125,81 @@
     color: var(--text);
   }
   .process-note b { color: var(--signal); }
-</style>
+
+  /* ---- Lightbox ---- */
+  .case-gallery figure img {
+    width: 100%; height: 160px; object-fit: cover; display: block;
+    cursor: zoom-in;
+    transition: opacity 0.15s ease;
+  }
+  .case-gallery figure img:hover { opacity: 0.85; }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.92);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-inner {
+    position: relative;
+    max-width: min(90vw, 1100px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .lightbox-inner img {
+    max-width: 100%;
+    max-height: 82vh;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    display: block;
+  }
+  .lightbox-caption {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+  }
+  .lightbox-close {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.5rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    background: none;
+    border: none;
+    transition: color 0.15s ease;
+  }
+  .lightbox-close:hover { color: #fff; }
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.15s ease;
+    z-index: 1001;
+  }
+  .lightbox-nav:hover { background: rgba(255,255,255,0.18); }
+  .lightbox-prev { left: 1rem; }
+  .lightbox-next { right: 1rem; }</style>
 </head>
 <body>
 
@@ -219,11 +293,11 @@
         </figure>
         <figure>
           <img src="images/mold-halves-open.jpg" alt="3D printed mold halves open, showing the cavity geometry for the motor mount">
-          <figcaption>Mold halves open — cavity geometry.</figcaption>
+          <figcaption>Mold halves open — cavity geometry. Mold Version-1.</figcaption>
         </figure>
         <figure>
           <img src="images/mold-parts-flat.jpg" alt="All 3D printed mold components laid out flat before assembly">
-          <figcaption>Mold components before assembly.</figcaption>
+          <figcaption>Mold components before assembly. Mold Version-3</figcaption>
         </figure>
         <figure>
           <img src="images/resin-cure-bagged.jpg" alt="Clamped mold wrapped in plastic during resin cure">
@@ -235,31 +309,31 @@
       <div class="case-gallery">
         <figure>
           <img src="images/carbon-mount-raw.png" alt="Demolded forged carbon fiber motor mount on a wooden workbench">
-          <figcaption>Freshly demolded, pre-trim.</figcaption>
+          <figcaption>Freshly demolded, post-trim.</figcaption>
         </figure>
         <figure>
           <img src="images/mount-clamped-detail.jpg" alt="Close-up of the trimmed carbon fiber mount held in a vise">
-          <figcaption>Mounting arm and bolt hole detail.</figcaption>
+          <figcaption>Mounting arm and bolt hole detail. Pre-trim</figcaption>
         </figure>
         <figure>
           <img src="images/mount-side-profile.jpg" alt="Side profile of the finished carbon fiber mount">
-          <figcaption>Side profile.</figcaption>
+          <figcaption>Side profile. Pre-trim</figcaption>
         </figure>
         <figure>
           <img src="images/mount-final-topdown.jpg" alt="Top-down view of the finished carbon fiber motor mount">
-          <figcaption>Top-down view, finished mount.</figcaption>
+          <figcaption>Very first composite part out of the mold.</figcaption>
         </figure>
         <figure>
           <img src="images/scale-aluminum-114g.png" alt="Original aluminum motor mount on a digital scale reading 114 grams">
-          <figcaption>Aluminum — 114 g.</figcaption>
+          <figcaption>Aluminum motor mount — 114 g.</figcaption>
         </figure>
         <figure>
           <img src="images/scale-carbon-48g.png" alt="Forged carbon fiber motor mount on a digital scale reading 48 grams">
-          <figcaption>Carbon — 48 g.</figcaption>
+          <figcaption>Forged Carbon Fibre motor mount — 48 g.</figcaption>
         </figure>
         <figure>
           <img src="images/motor-assembly.png" alt="Drone motor mounted via the carbon fiber bracket, viewed from below">
-          <figcaption>Motor seated in the finished mount.</figcaption>
+          <figcaption>Motor seated in the finished carbon fibre mount.</figcaption>
         </figure>
       </div>
     </div>
@@ -278,5 +352,117 @@
   </div>
 </footer>
 
+<script>
+(function() {
+  var toggle = document.querySelector('.nav-dropdown-toggle');
+  var menu   = document.querySelector('.nav-dropdown-menu');
+  if (!toggle || !menu) return;
+  var closeTimer = null;
+
+  function openMenu() {
+    clearTimeout(closeTimer);
+    toggle.classList.add('open');
+    menu.classList.add('open');
+  }
+  function scheduleClose() {
+    closeTimer = setTimeout(function() {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    }, 150);
+  }
+
+  toggle.addEventListener('mouseenter', openMenu);
+  toggle.addEventListener('mouseleave', scheduleClose);
+  menu.addEventListener('mouseenter', openMenu);
+  menu.addEventListener('mouseleave', scheduleClose);
+
+  // Also toggle on click (for touch/keyboard users)
+  toggle.addEventListener('click', function() {
+    var isOpen = menu.classList.contains('open');
+    if (isOpen) {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    }
+  });
+})();
+</script>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous">&#8592;</button>
+  <div class="lightbox-inner">
+    <img id="lbImg" src="" alt="">
+    <p class="lightbox-caption" id="lbCaption"></p>
+  </div>
+  <button class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next">&#8594;</button>
+</div>
+
+<script>
+(function () {
+  // Collect all gallery images in order
+  var imgs = Array.from(document.querySelectorAll('.case-gallery figure img'));
+  var current = 0;
+  var lb      = document.getElementById('lightbox');
+  var lbImg   = document.getElementById('lbImg');
+  var lbCap   = document.getElementById('lbCaption');
+
+  function open(index) {
+    current = (index + imgs.length) % imgs.length;
+    var fig = imgs[current].closest('figure');
+    var cap = fig ? fig.querySelector('figcaption') : null;
+    lbImg.src = imgs[current].src;
+    lbImg.alt = imgs[current].alt;
+    lbCap.textContent = cap ? cap.textContent.trim() : '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Click on gallery image to open
+  imgs.forEach(function (img, i) {
+    img.addEventListener('click', function () { open(i); });
+  });
+
+  // Close button
+  document.getElementById('lbClose').addEventListener('click', close);
+
+  // Prev / Next
+  document.getElementById('lbPrev').addEventListener('click', function (e) {
+    e.stopPropagation();
+    open(current - 1);
+  });
+  document.getElementById('lbNext').addEventListener('click', function (e) {
+    e.stopPropagation();
+    open(current + 1);
+  });
+
+  // Click backdrop to close
+  lb.addEventListener('click', function (e) {
+    if (e.target === lb) close();
+  });
+
+  // Keyboard: Escape to close, arrows to navigate
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')      close();
+    if (e.key === 'ArrowLeft')   open(current - 1);
+    if (e.key === 'ArrowRight')  open(current + 1);
+  });
+})();
+</script>
 </body>
 </html>

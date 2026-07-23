@@ -50,47 +50,50 @@
     50%       { box-shadow: 0 0 0 6px rgba(74,222,128,0.0); }
   }
 
-  /* ---- Slot buttons ---- */
+  /* ---- Pill buttons ---- */
   .btn-slot {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 7px;
     font-family: var(--font-mono);
     font-size: 0.82rem;
-    letter-spacing: 0.04em;
-    height: 42px;
-    width: 170px;
-    border-radius: 6px;
-    position: relative;
-    overflow: hidden;
+    letter-spacing: 0.03em;
+    height: 44px;
+    padding: 0 26px;
+    border-radius: 999px;
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    white-space: nowrap;
   }
   .btn-slot:hover { transform: translateY(-2px); }
   .btn-slot-primary {
     background: var(--signal);
     color: #0b0d0f;
-    font-weight: 600;
+    font-weight: 700;
     border: none;
-    box-shadow: 0 0 18px rgba(255,107,53,0.35);
+    box-shadow: 0 0 18px rgba(255,107,53,0.4);
   }
-  .btn-slot-primary::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
-    pointer-events: none;
+  .btn-slot-primary:hover {
+    background: #ff7e4d;
+    box-shadow: 0 0 24px rgba(255,107,53,0.55);
   }
   .btn-slot-secondary {
-    background: transparent;
+    background: #1a1e22;
     color: var(--text);
     border: 1px solid var(--border);
+    font-weight: 500;
   }
   .btn-slot-secondary:hover {
-    border-color: var(--signal);
-    background: rgba(255,107,53,0.06);
+    border-color: var(--text-dim);
+    background: #21262b;
   }
+  .btn-slot-secondary .arrow {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+  .btn-slot-secondary:hover .arrow { transform: translateX(3px); }
 
   /* ---- About section ---- */
   .about {
@@ -266,7 +269,7 @@
       <p class="lede">Mechanical &amp; Aerospace Engineering student at the University of British Columbia Okanagan — entering second year, still exploring where I want to specialize.</p>
       <div class="hero-cta">
         <a href="contact.html" class="btn-slot btn-slot-primary">Get in touch</a>
-        <a href="club.html" class="btn-slot btn-slot-secondary">View my work</a>
+        <a href="club.html" class="btn-slot btn-slot-secondary">View my work <span class="arrow">→</span></a>
       </div>
     </div>
   </section>
@@ -367,5 +370,49 @@
   </div>
 </footer>
 
+<script>
+(function() {
+  var toggle = document.querySelector('.nav-dropdown-toggle');
+  var menu   = document.querySelector('.nav-dropdown-menu');
+  if (!toggle || !menu) return;
+  var closeTimer = null;
+
+  function openMenu() {
+    clearTimeout(closeTimer);
+    toggle.classList.add('open');
+    menu.classList.add('open');
+  }
+  function scheduleClose() {
+    closeTimer = setTimeout(function() {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    }, 150);
+  }
+
+  toggle.addEventListener('mouseenter', openMenu);
+  toggle.addEventListener('mouseleave', scheduleClose);
+  menu.addEventListener('mouseenter', openMenu);
+  menu.addEventListener('mouseleave', scheduleClose);
+
+  // Also toggle on click (for touch/keyboard users)
+  toggle.addEventListener('click', function() {
+    var isOpen = menu.classList.contains('open');
+    if (isOpen) {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    }
+  });
+})();
+</script>
 </body>
 </html>
