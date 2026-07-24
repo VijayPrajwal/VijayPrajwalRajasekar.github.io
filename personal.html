@@ -37,10 +37,25 @@
     letter-spacing: 0.04em;
     border-bottom: 1px dashed var(--border);
   }
-  .proj-info { padding: 1.4rem; flex-grow: 1; display: flex; flex-direction: column; }
-  .proj-info h3 { font-size: 1.05rem; color: var(--text-dim); margin-bottom: 0.5rem; }
-  .proj-info p { color: var(--text-faint); font-size: 0.88rem; flex-grow: 1; }
-  .proj-info .mono { font-size: 0.7rem; color: var(--text-faint); margin-top: 1rem; letter-spacing: 0.04em; }
+  .proj-info { padding: 1.4rem; flex-grow: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+  .proj-info h3 { font-size: 1.1rem; }
+  .proj-info p { color: var(--text-dim); font-size: 0.9rem; flex-grow: 1; }
+  .proj-thumb { aspect-ratio: 16/9; overflow: hidden; background: var(--surface-raised); }
+  .proj-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  .proj-card:hover .proj-thumb img { transform: scale(1.04); }
+  .proj-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border-soft);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+  }
+  .proj-arrow { color: var(--signal); font-size: 1rem; transition: transform 0.15s ease; }
+  .proj-card:hover .proj-arrow { transform: translateX(4px); }
 
   .intro-note {
     background: var(--surface);
@@ -96,21 +111,25 @@
       </div>
 
       <div class="proj-grid">
-        <div class="proj-card">
-          <div class="proj-thumb">[ PROJECT IMAGE ]</div>
-          <div class="proj-info">
-            <h3>Add a personal project</h3>
-            <p>What it is, why you built it, and what you learned.</p>
-            <span class="mono">PLACEHOLDER · TAG_PERSONAL</span>
+        <a href="gear-train.html" class="proj-card">
+          <div class="proj-thumb">
+            <img src="images/gear-isometric-3d.jpg" alt="SolidWorks isometric render of four-gear involute gear train assembly">
           </div>
-        </div>
-        <div class="proj-card">
-          <div class="proj-thumb">[ PROJECT IMAGE ]</div>
           <div class="proj-info">
-            <h3>Add a personal project</h3>
-            <p>What it is, why you built it, and what you learned.</p>
-            <span class="mono">PLACEHOLDER · TAG_PERSONAL</span>
+            <span class="tag tag-personal" style="align-self:flex-start;">PERSONAL</span>
+            <h3>Involute Gear Train</h3>
+            <p>Modelled a 4-gear compound train from the involute equation in SolidWorks, then 3D printed every gear at the UBCO Makerspace. Iterated on clearance to get clean mesh.</p>
+            <div class="proj-footer">
+              <span>SolidWorks equations · FDM printing · Prusa i3</span>
+              <span class="proj-arrow">→</span>
+            </div>
           </div>
+        </a>
+
+        <div class="placeholder-card">
+          <div class="mono">[ NEXT PERSONAL PROJECT ]</div>
+          <h3>Add your next build here</h3>
+          <p style="font-size:0.85rem; margin-top:0.4rem;">Duplicate the card above for your next personal project.</p>
         </div>
       </div>
     </div>
